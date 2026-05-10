@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMARA — Dossier II: The Smart Grid Solution</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#03070F;--bg2:#06101A;--bg3:#091420;
+  --card:rgba(255,255,255,0.032);--card-h:rgba(255,255,255,0.055);
+  --b:rgba(255,255,255,0.06);--ba:rgba(0,180,255,0.25);
+  --blue:#00B4FF;--blue-d:#0077AA;--blue-soft:rgba(0,180,255,0.1);
+  --gold:#F59E0B;--gold-d:#B45309;--gold-soft:rgba(245,158,11,0.1);
+  --green:#00E5A0;--green-d:#00A370;--green-soft:rgba(0,229,160,0.1);
+  --danger:#EF4444;--danger-soft:rgba(239,68,68,0.1);
+  --warn:#F59E0B;
+  --tp:#EEF2FF;--ts:#94A3B8;--tm:#475569;
+  --fd:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--tp);font-family:var(--fb);font-size:15px;line-height:1.7;overflow-x:hidden}
+::selection{background:rgba(0,180,255,0.3);color:#fff}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--blue-d);border-radius:2px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 48px;background:rgba(3,7,15,0.9);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--b);transition:all 0.3s}
+.nlogo{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nmark{width:34px;height:34px;background:linear-gradient(135deg,var(--blue),var(--blue-d));
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--fd);font-size:17px;color:#fff;box-shadow:0 0 24px rgba(0,180,255,0.35)}
+.ntext{font-family:var(--fd);font-size:20px;letter-spacing:3px;color:var(--tp)}
+.nsub{font-size:9px;letter-spacing:2px;color:var(--tm);font-family:var(--fm);text-transform:uppercase;display:block;margin-top:-2px}
+.nlinks{display:flex;align-items:center;gap:28px;list-style:none}
+.nlinks a{text-decoration:none;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ts);transition:color 0.2s;font-weight:500}
+.nlinks a:hover{color:var(--blue)}
+.nbadge{font-family:var(--fm);font-size:10px;color:var(--blue);padding:4px 12px;border:1px solid var(--ba);border-radius:4px;letter-spacing:1px}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:110px 48px 80px}
+.hbg{position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 20% 40%,rgba(0,180,255,0.07) 0%,transparent 60%),
+  radial-gradient(ellipse 50% 70% at 80% 70%,rgba(0,229,160,0.04) 0%,transparent 50%),
+  linear-gradient(180deg,#03070F 0%,#050E18 100%)}
+.hgrid{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,180,255,0.04) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(0,180,255,0.04) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse at 30% 50%,black 0%,transparent 65%)}
+.hcontent{position:relative;z-index:2;max-width:1200px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 420px;gap:60px;align-items:center}
+.heyebrow{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.heline{width:40px;height:1px;background:var(--blue)}
+.hetext{font-family:var(--fm);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--blue)}
+.htitle{font-family:var(--fd);font-size:clamp(50px,6.5vw,86px);line-height:0.92;
+  letter-spacing:2px;color:var(--tp);margin-bottom:22px}
+.htitle .blue{color:var(--blue)}.htitle .green{color:var(--green)}
+.hdesc{font-size:15px;line-height:1.85;color:var(--ts);max-width:540px;margin-bottom:36px}
+.hmeta{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.hmi{display:flex;flex-direction:column;gap:2px}
+.hml{font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--tm)}
+.hmv{font-family:var(--fm);font-size:13px;color:var(--blue);font-weight:500}
+.hdiv{width:1px;height:30px;background:var(--b)}
+/* hero right panel — summary stats box */
+.hstats-box{background:rgba(0,180,255,0.04);border:1px solid var(--ba);border-radius:20px;padding:28px;
+  backdrop-filter:blur(10px);position:relative;overflow:hidden}
+.hstats-box::before{content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--blue),transparent)}
+.hstat-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05)}
+.hstat-row:last-child{border-bottom:none}
+.hstat-lbl{font-size:12px;color:var(--ts)}
+.hstat-val{font-family:var(--fd);font-size:28px;letter-spacing:1px}
+.hstat-val.blue{color:var(--blue)}.hstat-val.gold{color:var(--gold)}.hstat-val.green{color:var(--green)}
+.hstat-unit{font-family:var(--fm);font-size:10px;color:var(--tm);margin-left:4px}
+.scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0.35;animation:bou 2.2s infinite}
+.sarrow{width:18px;height:18px;border-right:1px solid var(--ts);border-bottom:1px solid var(--ts);transform:rotate(45deg)}
+.shint-t{font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--tm)}
+@keyframes bou{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+
+/* SECTION BASE */
+section{padding:90px 48px}
+.container{max-width:1200px;margin:0 auto}
+.seyebrow{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.snum{font-family:var(--fm);font-size:10px;color:var(--blue);letter-spacing:2px}
+.sline{width:28px;height:1px;background:var(--ba)}
+.stag{font-family:var(--fm);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--tm)}
+.stitle{font-family:var(--fd);font-size:clamp(34px,4.5vw,58px);letter-spacing:2px;line-height:1;
+  color:var(--tp);margin-bottom:14px}
+.stitle .blue{color:var(--blue)}.stitle .gold{color:var(--gold)}.stitle .green{color:var(--green)}
+.ssub{font-size:15px;color:var(--ts);max-width:620px;line-height:1.85;margin-bottom:52px}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--b);border-radius:14px;padding:24px;
+  transition:all 0.3s;position:relative;overflow:hidden}
+.card:hover{background:var(--card-h);border-color:rgba(0,180,255,0.12);transform:translateY(-2px)}
+.cshine{position:absolute;top:0;left:20px;right:20px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:0;transition:opacity 0.3s}
+.card:hover .cshine{opacity:1}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+.g12{display:grid;grid-template-columns:1fr 2fr;gap:20px}
+
+/* CHART WRAPS */
+.cw{background:var(--card);border:1px solid var(--b);border-radius:14px;padding:22px}
+.ct{font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ts);margin-bottom:3px}
+.cs{font-size:11px;color:var(--tm);margin-bottom:16px}
+.ch{position:relative;height:240px}
+.ch2{position:relative;height:300px}
+.csrc{margin-top:10px;font-size:10px;color:var(--tm);font-family:var(--fm)}
+
+/* DATA ROWS */
+.dr{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.dr:last-child{border-bottom:none}
+.drl{font-size:13px;color:var(--ts)}
+.drv{font-family:var(--fm);font-size:13px;font-weight:500}
+.drv.blue{color:var(--blue)}.drv.gold{color:var(--gold)}.drv.green{color:var(--green)}.drv.red{color:var(--danger)}
+.drbar{width:100%;height:4px;background:rgba(255,255,255,0.05);border-radius:2px;margin-top:5px;overflow:hidden}
+.drfill{height:100%;border-radius:2px;transition:width 1.8s ease}
+.bf-blue{background:linear-gradient(90deg,var(--blue-d),var(--blue))}
+.bf-gold{background:linear-gradient(90deg,var(--gold-d),var(--gold))}
+.bf-green{background:linear-gradient(90deg,var(--green-d),var(--green))}
+
+/* CALLOUTS */
+.co{border-radius:12px;padding:20px 24px;margin:24px 0;position:relative;overflow:hidden}
+.co::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.co-blue{background:var(--blue-soft);border:1px solid rgba(0,180,255,0.18)}
+.co-blue::before{background:var(--blue)}
+.co-gold{background:var(--gold-soft);border:1px solid rgba(245,158,11,0.18)}
+.co-gold::before{background:var(--gold)}
+.co-green{background:var(--green-soft);border:1px solid rgba(0,229,160,0.18)}
+.co-green::before{background:var(--green)}
+.co-red{background:var(--danger-soft);border:1px solid rgba(239,68,68,0.18)}
+.co-red::before{background:var(--danger)}
+.colbl{font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px}
+.co-blue .colbl{color:var(--blue)}.co-gold .colbl{color:var(--gold)}
+.co-green .colbl{color:var(--green)}.co-red .colbl{color:var(--danger)}
+.cotxt{font-size:13px;line-height:1.75;color:var(--ts)}
+.cotxt strong{color:var(--tp)}
+
+/* SPEC TABLE */
+.spec-table{width:100%;border-collapse:collapse;font-size:12px;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.spec-table thead,.spec-table tbody,.spec-table tr{display:table;width:100%;table-layout:fixed}
+.spec-table th{font-family:var(--fm);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--tm);padding:9px 12px;text-align:left;border-bottom:1px solid var(--b);white-space:nowrap}
+.spec-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--ts);
+  font-size:12px;vertical-align:top;line-height:1.5;word-break:break-word}
+.spec-table tr:hover td{background:rgba(255,255,255,0.02)}
+.spec-table .hl td{background:rgba(0,180,255,0.04)}
+.spec-table .hl td:first-child{border-left:2px solid var(--blue)}
+.spec-table .rec{color:var(--blue);font-weight:600;font-family:var(--fm);font-size:10px}
+.spec-table .price{color:var(--gold);font-family:var(--fm)}
+@media(max-width:768px){
+  .spec-table td,.spec-table th{padding:8px 10px;font-size:11px}
+  .spec-table th{font-size:8.5px}
+}
+
+/* PHASE TIMELINE */
+.phase-track{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:40px;position:relative}
+.phase-track::before{content:'';position:absolute;top:28px;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--blue-d),var(--blue),var(--green));z-index:0}
+.phase-item{position:relative;z-index:1;padding-top:60px}
+.phase-dot{position:absolute;top:18px;left:50%;transform:translateX(-50%);
+  width:22px;height:22px;border-radius:50%;border:2px solid var(--blue);
+  background:var(--bg);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 16px rgba(0,180,255,0.4)}
+.phase-dot-inner{width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.phase-dot.done{border-color:var(--green);box-shadow:0 0 16px rgba(0,229,160,0.4)}
+.phase-dot.done .phase-dot-inner{background:var(--green)}
+.phase-label{text-align:center;padding:0 12px}
+.phase-num{font-family:var(--fd);font-size:32px;letter-spacing:2px;color:var(--blue);margin-bottom:4px}
+.phase-name{font-size:11px;font-weight:600;color:var(--tp);margin-bottom:6px;letter-spacing:0.5px}
+.phase-years{font-family:var(--fm);font-size:10px;color:var(--tm);margin-bottom:10px}
+.phase-mw{font-family:var(--fd);font-size:20px;color:var(--green);margin-bottom:8px}
+.phase-items{display:flex;flex-direction:column;gap:4px}
+.phase-item-tag{font-size:11px;color:var(--ts);display:flex;align-items:center;gap:6px}
+.phase-item-tag::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--blue);flex-shrink:0}
+
+/* NODE MAP CONTAINER */
+.map-container{background:var(--card);border:1px solid var(--b);border-radius:14px;
+  padding:24px;position:relative;overflow:hidden}
+.map-legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px}
+.ml-item{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ts);font-family:var(--fm)}
+.ml-dot{width:10px;height:10px;border-radius:50%}
+
+/* NEXUS ARCHITECTURE */
+.nexus-layer{background:var(--card);border:1px solid var(--b);border-radius:12px;
+  padding:16px 20px;margin-bottom:12px;display:flex;align-items:center;gap:16px}
+.nexus-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:20px;flex-shrink:0}
+.nexus-title{font-size:14px;font-weight:600;color:var(--tp);margin-bottom:3px}
+.nexus-desc{font-size:12px;color:var(--ts);line-height:1.6}
+.nexus-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.nexus-tag{font-family:var(--fm);font-size:9px;letter-spacing:1px;padding:2px 8px;border-radius:4px;
+  background:rgba(0,180,255,0.08);color:var(--blue);border:1px solid rgba(0,180,255,0.15)}
+.nexus-conn{display:flex;align-items:center;justify-content:center;margin:-4px 0;height:20px}
+.nexus-conn-line{width:2px;height:20px;background:linear-gradient(180deg,var(--blue-d),rgba(0,180,255,0.3))}
+
+/* TEAM GRID */
+.team-category{margin-bottom:32px}
+.tc-header{font-family:var(--fd);font-size:22px;letter-spacing:2px;color:var(--blue);margin-bottom:14px}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.team-role{background:var(--card);border:1px solid var(--b);border-radius:10px;padding:14px 16px;
+  transition:border-color 0.2s}
+.team-role:hover{border-color:var(--ba)}
+.tr-title{font-size:13px;font-weight:600;color:var(--tp);margin-bottom:3px}
+.tr-count{font-family:var(--fm);font-size:10px;color:var(--blue);letter-spacing:1px}
+.tr-note{font-size:11px;color:var(--tm);margin-top:4px}
+
+/* ENERGY SOURCE CARDS */
+.energy-card{background:var(--card);border:1px solid var(--b);border-radius:14px;padding:24px;
+  position:relative;overflow:hidden;transition:all 0.3s}
+.energy-card:hover{transform:translateY(-3px);border-color:var(--ba)}
+.ec-accent{position:absolute;top:0;left:0;right:0;height:3px}
+.ec-icon{font-size:36px;margin-bottom:14px}
+.ec-name{font-family:var(--fd);font-size:24px;letter-spacing:2px;margin-bottom:4px}
+.ec-role{font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.ec-mw{font-family:var(--fd);font-size:38px;line-height:1;margin-bottom:4px}
+.ec-pct{font-size:11px;font-family:var(--fm);margin-bottom:12px}
+.ec-specs{display:flex;flex-direction:column;gap:6px}
+.ec-spec{font-size:12px;color:var(--ts);display:flex;align-items:center;gap:7px}
+.ec-spec::before{content:'';width:3px;height:3px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* CAPEX TABLE */
+.capex-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.capex-row:last-child{border-bottom:none}
+.capex-label{font-size:13px;color:var(--ts);width:220px;flex-shrink:0}
+.capex-bar-wrap{flex:1;position:relative}
+.capex-bar-bg{height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden}
+.capex-bar-fill{height:100%;border-radius:3px;transition:width 2s ease}
+.capex-value{font-family:var(--fm);font-size:12px;color:var(--gold);width:70px;text-align:right;flex-shrink:0}
+
+/* TERMINAL SPECS */
+.terminal-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.terminal-feat{background:var(--card);border:1px solid var(--b);border-radius:10px;padding:16px;
+  display:flex;gap:12px;align-items:start}
+.tf-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;background:var(--blue-soft)}
+.tf-title{font-size:13px;font-weight:600;color:var(--tp);margin-bottom:3px}
+.tf-desc{font-size:11px;color:var(--ts);line-height:1.6}
+
+/* BRAND BADGE */
+.brand-rec{display:inline-flex;align-items:center;gap:6px;background:rgba(0,180,255,0.08);
+  border:1px solid var(--ba);border-radius:6px;padding:4px 12px;
+  font-family:var(--fm);font-size:10px;letter-spacing:1px;color:var(--blue);margin-top:8px}
+
+/* FOOTER */
+footer{background:var(--bg);border-top:1px solid var(--b);padding:44px 48px}
+.footer-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:24px}
+.fbrand{font-family:var(--fd);font-size:22px;letter-spacing:4px;color:var(--blue)}
+.fbsub{font-family:var(--fm);font-size:9px;color:var(--tm);letter-spacing:1.5px;margin-top:3px}
+.fslogan{font-family:var(--fm);font-size:11px;color:var(--blue);letter-spacing:2px;margin-top:6px}
+.fcopy{font-family:var(--fm);font-size:10px;color:var(--tm);text-align:center;line-height:1.8}
+.fid{font-family:var(--fm);font-size:10px;color:var(--tm);text-align:right;line-height:1.8}
+.fnext{color:var(--blue);margin-top:4px;display:block}
+
+/* ANIM */
+/* fi: visible by default; JS adds opacity animation only after confirming ready */
+.fi{transition:opacity 0.7s ease,transform 0.7s ease}
+.js-ready .fi{opacity:0;transform:translateY(20px)}
+.js-ready .fi.vis{opacity:1;transform:translateY(0)}
+.d1{transition-delay:0.1s}.d2{transition-delay:0.2s}.d3{transition-delay:0.3s}.d4{transition-delay:0.4s}
+
+@keyframes pulse{0%,100%{opacity:0.6}50%{opacity:1}}
+.pulse-dot{animation:pulse 2s infinite}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .hcontent{grid-template-columns:1fr;gap:40px}
+  .g2,.g21,.g12{grid-template-columns:1fr}
+  .g3,.g4{grid-template-columns:1fr 1fr}
+  .phase-track{grid-template-columns:1fr 1fr}
+  .team-grid{grid-template-columns:1fr 1fr}
+  nav{padding:12px 24px}.nlinks{display:none}
+  section{padding:60px 24px}
+}
+@media(max-width:640px){
+  .g3,.g4,.terminal-grid{grid-template-columns:1fr}
+  .phase-track{grid-template-columns:1fr}
+  .htitle{font-size:46px}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#" class="nlogo">
+    <div class="nmark">A</div>
+    <div>
+      <div class="ntext">AMARA</div>
+      <span class="nsub">Power Systems Nigeria</span>
+    </div>
+  </a>
+  <ul class="nlinks">
+    <li><a href="#energy-mix">Energy Mix</a></li>
+    <li><a href="#grid-network">Grid</a></li>
+    <li><a href="#nexus">NEXUS AI</a></li>
+    <li><a href="#terminal">Smart Terminal</a></li>
+    <li><a href="#investment">Investment</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#team">Team</a></li>
+  </ul>
+  <div class="nbadge">DOSSIER II — THE SOLUTION</div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hbg"></div>
+  <div class="hgrid"></div>
+  <div class="hcontent">
+    <div>
+      <div class="heyebrow"><div class="heline"></div><span class="hetext">AMARA Grid System — Full Technical Specification &amp; Investment Blueprint</span></div>
+      <h1 class="htitle">THE AMARA<br><span class="blue">SMART GRID</span><br><span class="green">SOLUTION</span></h1>
+      <p class="hdesc">A fully specified, intelligently governed national grid system — designed from the ground up for Nigeria's demand profile, geography, and growth trajectory. This dossier covers every layer: generation infrastructure, transmission architecture, intelligent routing, AI governance, smart metering, financial modelling, and the full professional team required to execute the transformation.</p>
+      <div class="hmeta">
+        <div class="hmi"><span class="hml">Document</span><span class="hmv">Dossier II of III</span></div>
+        <div class="hdiv"></div>
+        <div class="hmi"><span class="hml">Target Capacity</span><span class="hmv">30,000+ MW</span></div>
+        <div class="hdiv"></div>
+        <div class="hmi"><span class="hml">Primary Investor</span><span class="hmv">Dangote Group + IFC</span></div>
+        <div class="hdiv"></div>
+        <div class="hmi"><span class="hml">Total CapEx</span><span class="hmv">$68–96B</span></div>
+      </div>
+    </div>
+    <div class="hstats-box">
+      <div class="hstat-row">
+        <span class="hstat-lbl">Phase 1 Target Generation</span>
+        <span><span class="hstat-val blue">10,000</span><span class="hstat-unit">MW</span></span>
+      </div>
+      <div class="hstat-row">
+        <span class="hstat-lbl">Phase 1 Capital Investment</span>
+        <span><span class="hstat-val gold">$18</span><span class="hstat-unit">BILLION</span></span>
+      </div>
+      <div class="hstat-row">
+        <span class="hstat-lbl">Smart Terminals to Deploy</span>
+        <span><span class="hstat-val blue">50M</span><span class="hstat-unit">UNITS</span></span>
+      </div>
+      <div class="hstat-row">
+        <span class="hstat-lbl">CO₂ Offset (Annual, Full)</span>
+        <span><span class="hstat-val green">76M</span><span class="hstat-unit">TONNES</span></span>
+      </div>
+      <div class="hstat-row">
+        <span class="hstat-lbl">25-Year Revenue NPV</span>
+        <span><span class="hstat-val gold">$244</span><span class="hstat-unit">BILLION</span></span>
+      </div>
+      <div class="hstat-row">
+        <span class="hstat-lbl">Jobs Created (Direct)</span>
+        <span><span class="hstat-val green">250K</span><span class="hstat-unit">+</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span class="shint-t">Scroll</span><div class="sarrow"></div></div>
+</section>
+
+<!-- ENERGY MIX -->
+<section id="energy-mix" style="background:var(--bg2)">
+  <div class="container">
+    <div class="seyebrow fi"><span class="snum">01</span><div class="sline"></div><span class="stag">Generation Strategy</span></div>
+    <h2 class="stitle fi">ENERGY <span class="blue">MIX</span> ARCHITECTURE</h2>
+    <p class="ssub fi">AMARA Grid is built on a sustainable-first, reliability-backed generation philosophy. Solar leads as the primary source, leveraging Nigeria's exceptional irradiance. Natural gas provides dispatchable baseload and backup. Hydro, wind, and biomass supplement the portfolio. No single source dominates to the point of systemic vulnerability.</p>
+
+    <div class="g2 fi" style="margin-bottom:24px;align-items:start">
+      <div class="cw">
+        <div class="ct">National Generation Mix — Full Build-Out (30,000 MW)</div>
+        <div class="cs">Source distribution across all generation technologies</div>
+        <div class="ch2"><canvas id="cMix"></canvas></div>
+        <div class="csrc">* Solar primary reflects Nigeria's 4.5–6.8 kWh/m²/day irradiance advantage</div>
+      </div>
+      <div class="cw">
+        <div class="ct">Cumulative Capacity by Phase (MW, Stacked by Source)</div>
+        <div class="cs">Phased deployment strategy — 10,000 MW per primary phase</div>
+        <div class="ch2"><canvas id="cPhase"></canvas></div>
+        <div class="csrc">* Phase 0 = survey, approvals, land acquisition, procurement</div>
+      </div>
+    </div>
+
+    <!-- Energy Source Cards -->
+    <div class="g4 fi">
+      <div class="energy-card">
+        <div class="ec-accent" style="background:linear-gradient(90deg,var(--gold-d),var(--gold))"></div>
+        <div class="ec-icon">☀️</div>
+        <div class="ec-name" style="color:var(--gold)">SOLAR</div>
+        <div class="ec-role" style="color:var(--gold)">Primary Source</div>
+        <div class="ec-mw" style="color:var(--gold)">12,000</div>
+        <div class="ec-pct" style="color:var(--gold)">40% of total capacity</div>
+        <div class="ec-specs">
+          <span class="ec-spec" style="color:var(--ts)">Utility-scale PV farms</span>
+          <span class="ec-spec" style="color:var(--ts)">North-Nigeria priority zones</span>
+          <span class="ec-spec" style="color:var(--ts)">Grid-scale battery storage</span>
+          <span class="ec-spec" style="color:var(--ts)">Agrivoltaic co-location</span>
+          <span class="ec-spec" style="color:var(--ts)">~100–120 km² total land</span>
+        </div>
+      </div>
+      <div class="energy-card">
+        <div class="ec-accent" style="background:linear-gradient(90deg,#1D4ED8,#3B82F6)"></div>
+        <div class="ec-icon">🔥</div>
+        <div class="ec-name" style="color:#3B82F6">GAS</div>
+        <div class="ec-role" style="color:#3B82F6">Baseload + Backup</div>
+        <div class="ec-mw" style="color:#3B82F6">10,500</div>
+        <div class="ec-pct" style="color:#3B82F6">35% of total capacity</div>
+        <div class="ec-specs">
+          <span class="ec-spec" style="color:var(--ts)">Combined Cycle Gas (CCGT)</span>
+          <span class="ec-spec" style="color:var(--ts)">206 TCF proven reserves</span>
+          <span class="ec-spec" style="color:var(--ts)">55–62% plant efficiency</span>
+          <span class="ec-spec" style="color:var(--ts)">Delta/Rivers priority sites</span>
+          <span class="ec-spec" style="color:var(--ts)">Dispatchable on demand</span>
+        </div>
+      </div>
+      <div class="energy-card">
+        <div class="ec-accent" style="background:linear-gradient(90deg,var(--blue-d),var(--blue))"></div>
+        <div class="ec-icon">💧</div>
+        <div class="ec-name" style="color:var(--blue)">HYDRO</div>
+        <div class="ec-role" style="color:var(--blue)">Stable Baseload</div>
+        <div class="ec-mw" style="color:var(--blue)">4,500</div>
+        <div class="ec-pct" style="color:var(--blue)">15% of total capacity</div>
+        <div class="ec-specs">
+          <span class="ec-spec" style="color:var(--ts)">Existing: Kainji, Shiroro, Jebba</span>
+          <span class="ec-spec" style="color:var(--ts)">Mambilla: 3,050 MW (new)</span>
+          <span class="ec-spec" style="color:var(--ts)">Zungeru: 700 MW operational</span>
+          <span class="ec-spec" style="color:var(--ts)">14,750 MW national potential</span>
+          <span class="ec-spec" style="color:var(--ts)">24/7 reliable generation</span>
+        </div>
+      </div>
+      <div class="energy-card">
+        <div class="ec-accent" style="background:linear-gradient(90deg,var(--green-d),var(--green))"></div>
+        <div class="ec-icon">💨</div>
+        <div class="ec-name" style="color:var(--green)">WIND</div>
+        <div class="ec-role" style="color:var(--green)">Supplementary</div>
+        <div class="ec-mw" style="color:var(--green)">2,100</div>
+        <div class="ec-pct" style="color:var(--green)">7% + 3% biomass/other</div>
+        <div class="ec-specs">
+          <span class="ec-spec" style="color:var(--ts)">Jos Plateau: 5–7 m/s avg</span>
+          <span class="ec-spec" style="color:var(--ts)">Maiduguri: 5–6 m/s avg</span>
+          <span class="ec-spec" style="color:var(--ts)">3–5 MW turbines (utility)</span>
+          <span class="ec-spec" style="color:var(--ts)">Complementary to solar</span>
+          <span class="ec-spec" style="color:var(--ts)">Peak at night/harmattan</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLAR INFRASTRUCTURE -->
+<section id="solar-infra">
+  <div class="container">
+    <div class="seyebrow fi"><span class="snum">02</span><div class="sline"></div><span class="stag">Solar Infrastructure</span></div>
+    <h2 class="stitle fi"><span class="gold">SOLAR</span> — PRIMARY GENERATION</h2>
+    <p class="ssub fi">Nigeria sits in the Sun Belt. The northern region receives 5.5–6.8 kWh/m²/day of solar irradiance — among the highest in the world, comparable to the Sahara. This is AMARA's primary strategic advantage. No fuel imports. No price volatility. No emissions. Structurally, it is the most defensible long-term energy investment Nigeria can make.</p>
+    <div class="g2 fi" style="align-items:start;margin-bottom:24px">
+      <div class="cw">
+        <div class="ct">Solar Irradiance by Nigerian City (kWh/m²/day)</div>
+        <div class="cs">Higher = stronger solar priority for utility-scale farm siting. Source: NASA POWER, ESMAP</div>
+        <div class="ch"><canvas id="cSolar"></canvas></div>
+        <div class="csrc">* Sokoto and Maiduguri regions: world-class solar resources. Priority Phase 1 sites.</div>
+      </div>
+      <div>
+        <div class="card fi" style="margin-bottom:16px">
+          <div class="cshine"></div>
+          <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;margin-bottom:16px;color:var(--tp)">RECOMMENDED TECHNOLOGY — SOLAR</h3>
+          <table class="spec-table">
+            <thead><tr><th>Manufacturer</th><th>Module Type</th><th>Efficiency</th><th>Price/Wp</th><th>Recommendation</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td><strong>LONGi Solar</strong></td><td>Hi-MO 6 Mono PERC</td><td>22.8%</td><td class="price">$0.21/Wp</td><td class="rec">★ PRIMARY</td></tr>
+              <tr class="hl"><td><strong>JinkoSolar</strong></td><td>Tiger Neo N-type</td><td>22.4%</td><td class="price">$0.22/Wp</td><td class="rec">★ PRIMARY</td></tr>
+              <tr><td>Canadian Solar</td><td>HiKu7 TOPCon</td><td>21.9%</td><td class="price">$0.23/Wp</td><td style="color:var(--ts);font-size:11px">Secondary</td></tr>
+              <tr><td>First Solar</td><td>Series 7 CdTe</td><td>19.5%</td><td class="price">$0.26/Wp</td><td style="color:var(--ts);font-size:11px">Arid zones</td></tr>
+              <tr><td>Trina Solar</td><td>Vertex S+ NEG9RC.27</td><td>22.6%</td><td class="price">$0.22/Wp</td><td style="color:var(--ts);font-size:11px">Alternative</td></tr>
+            </tbody>
+          </table>
+          <div class="co co-gold" style="margin-top:14px;padding:12px 16px">
+            <div class="colbl">Procurement Note</div>
+            <div class="cotxt" style="font-size:12px">At 12,000 MW solar, procurement volume = 12 billion Wp. At $0.21/Wp bulk rate, module cost alone: <strong>~$2.52 billion</strong>. Nigeria's volume justifies direct factory-to-site contracts with LONGi and JinkoSolar — bypassing distributors entirely. Negotiated pricing target: $0.18–0.20/Wp.</div>
+          </div>
+        </div>
+        <div class="card fi">
+          <div class="cshine"></div>
+          <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;margin-bottom:14px">GRID-SCALE BATTERY STORAGE</h3>
+          <table class="spec-table">
+            <thead><tr><th>System</th><th>Manufacturer</th><th>Capacity</th><th>Est. Cost</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td><strong>Megapack 2XL</strong></td><td>Tesla Energy</td><td>3.9 MWh/unit</td><td class="price">$1.3M/unit</td></tr>
+              <tr class="hl"><td><strong>PowerStore</strong></td><td>ABB</td><td>Scalable</td><td class="price">$0.28/kWh</td></tr>
+              <tr><td>BESS Container</td><td>Huawei Digital</td><td>5 MWh/unit</td><td class="price">$0.22/kWh</td></tr>
+              <tr><td>Fluence Gridstack</td><td>Siemens/AES</td><td>Modular</td><td class="price">$0.30/kWh</td></tr>
+            </tbody>
+          </table>
+          <div class="co co-blue" style="margin-top:14px;padding:12px 16px">
+            <div class="colbl">Storage Strategy</div>
+            <div class="cotxt" style="font-size:12px">Target: 6-hour storage at 30% of solar capacity = 3,600 MWh Phase 1. This bridges solar generation gaps and eliminates the intermittency argument entirely. <strong>With storage, solar behaves like a dispatchable baseload asset.</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GAS + WIND + HYDRO -->
+<section id="backup-gen" style="background:var(--bg2)">
+  <div class="container">
+    <div class="seyebrow fi"><span class="snum">03</span><div class="sline"></div><span class="stag">Backup &amp; Supplementary Generation</span></div>
+    <h2 class="stitle fi">GAS, HYDRO <span class="blue">&amp; WIND</span></h2>
+    <p class="ssub fi">Nigeria holds 206 trillion cubic feet of proven natural gas reserves — the 9th largest in the world. Combined with existing hydro infrastructure and significant wind resources in the north, AMARA Grid has a fully diversified backup generation portfolio that ensures 24/7 supply regardless of solar availability.</p>
+    <div class="g3 fi">
+      <div class="card">
+        <div class="cshine"></div>
+        <h3 style="font-family:var(--fd);font-size:18px;letter-spacing:2px;color:#3B82F6;margin-bottom:14px">NATURAL GAS — CCGT</h3>
+        <table class="spec-table">
+          <thead><tr><th>OEM</th><th>Model</th><th>Capacity</th><th>Efficiency</th></tr></thead>
+          <tbody>
+            <tr class="hl"><td><strong>Siemens</strong></td><td>SGT6-9000HL</td><td>593 MW</td><td class="rec">63%</td></tr>
+            <tr class="hl"><td><strong>GE Gas Power</strong></td><td>9HA.02</td><td>571 MW</td><td class="rec">62.4%</td></tr>
+            <tr><td>Mitsubishi</td><td>JAC Series</td><td>566 MW</td><td style="color:var(--ts)">62%</td></tr>
+            <tr><td>Baker Hughes</td><td>9F.05</td><td>295 MW</td><td style="color:var(--ts)">58%</td></tr>
+          </tbody>
+        </table>
+        <div class="co co-blue" style="margin-top:12px;padding:10px 14px">
+          <div class="colbl">Priority Sites</div>
+          <div class="cotxt" style="font-size:11px">Bonny/Port Harcourt (near gas fields), Escravos, Egbin (Lagos existing), Geregu (Kogi — existing + expansion), Calabar. Gas pipeline connectivity to be upgraded in parallel.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="cshine"></div>
+        <h3 style="font-family:var(--fd);font-size:18px;letter-spacing:2px;color:var(--blue);margin-bottom:14px">HYDRO — EXISTING + NEW</h3>
+        <div class="dr"><span class="drl">Kainji Dam (Niger)</span><span class="drv blue">760 MW</span></div>
+        <div class="dr"><span class="drl">Shiroro Dam (Niger)</span><span class="drv blue">600 MW</span></div>
+        <div class="dr"><span class="drl">Jebba Dam (Kwara)</span><span class="drv blue">578 MW</span></div>
+        <div class="dr"><span class="drl">Zungeru (commissioned)</span><span class="drv green">700 MW</span></div>
+        <div class="dr"><span class="drl">Mambilla (under dev.)</span><span class="drv gold">3,050 MW</span></div>
+        <div class="dr"><span class="drl">Gurara II (planned)</span><span class="drv gold">360 MW</span></div>
+        <div class="dr"><span class="drl">Remaining potential</span><span class="drv" style="color:var(--ts)">~9,000 MW</span></div>
+        <div class="co co-green" style="margin-top:12px;padding:10px 14px">
+          <div class="colbl">AMARA Hydro Strategy</div>
+          <div class="cotxt" style="font-size:11px">Integrate existing dams into NEXUS SCADA. Accelerate Mambilla. Commission Gurara II by Phase 2. Long-term: unlock ~9,000 MW additional hydro potential in Phase 3 and export stage.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="cshine"></div>
+        <h3 style="font-family:var(--fd);font-size:18px;letter-spacing:2px;color:var(--green);margin-bottom:14px">WIND — NORTHERN PLATEAUS</h3>
+        <table class="spec-table">
+          <thead><tr><th>OEM</th><th>Turbine</th><th>Unit MW</th></tr></thead>
+          <tbody>
+            <tr class="hl"><td><strong>Vestas</strong></td><td>V150-4.5 MW</td><td class="rec">4.5 MW</td></tr>
+            <tr class="hl"><td><strong>Siemens Gamesa</strong></td><td>SG 5.0-145</td><td class="rec">5.0 MW</td></tr>
+            <tr><td>GE Renewable</td><td>Cypress 5.3 MW</td><td style="color:var(--ts)">5.3 MW</td></tr>
+            <tr><td>Envision</td><td>EN-171/5.X</td><td style="color:var(--ts)">5.0 MW</td></tr>
+          </tbody>
+        </table>
+        <div class="dr" style="margin-top:12px"><span class="drl">Jos Plateau avg wind speed</span><span class="drv green">5–7 m/s</span></div>
+        <div class="dr"><span class="drl">Maiduguri avg wind speed</span><span class="drv green">5–6 m/s</span></div>
+        <div class="dr"><span class="drl">Target installations Ph1</span><span class="drv blue">~160 turbines</span></div>
+        <div class="dr"><span class="drl">Phase 1 wind capacity</span><span class="drv blue">700 MW</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GRID NETWORK -->
+<section id="grid-network">
+  <div class="container">
+    <div class="seyebrow fi"><span class="snum">04</span><div class="sline"></div><span class="stag">Grid Network Architecture</span></div>
+    <h2 class="stitle fi">NATIONAL GRID <span class="blue">TOPOLOGY</span></h2>
+    <p class="ssub fi">AMARA Grid is designed as a multi-node, intelligent mesh network — not a hub-and-spoke system. Every node communicates bidirectionally. Every transmission path has a redundant alternative. A failure at one node does not collapse the system. This is the fundamental architectural departure from the existing TCN structure that has collapsed over 100 times.</p>
+
+    <div class="g12 fi" style="margin-bottom:24px;align-items:start">
+      <!-- Nigeria SVG Node Map -->
+      <div class="map-container">
+        <div class="ct" style="margin-bottom:12px">AMARA GRID — National Node Network</div>
+        <svg viewBox="0 0 360 400" style="width:100%;max-width:360px;display:block;margin:0 auto">
+          <!-- Nigeria simplified outline / zones -->
+          <defs>
+            <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <radialGradient id="nodeGrad1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00B4FF" stop-opacity="0.8"/><stop offset="100%" stop-color="#00B4FF" stop-opacity="0.1"/></radialGradient>
+            <radialGradient id="nodeGrad2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#F59E0B" stop-opacity="0.9"/><stop offset="100%" stop-color="#F59E0B" stop-opacity="0.1"/></radialGradient>
+            <radialGradient id="nodeGrad3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00E5A0" stop-opacity="0.8"/><stop offset="100%" stop-color="#00E5A0" stop-opacity="0.1"/></radialGradient>
+          </defs>
+
+          <!-- Background terrain suggestion -->
+          <rect width="360" height="400" fill="rgba(0,20,40,0.3)" rx="8"/>
+
+          <!-- ZONE LABELS background -->
+          <text x="60" y="62" fill="rgba(245,158,11,0.2)" font-size="9" font-family="JetBrains Mono,monospace" letter-spacing="1">NORTH-WEST</text>
+          <text x="220" y="62" fill="rgba(245,158,11,0.2)" font-size="9" font-family="JetBrains Mono,monospace" letter-spacing="1">NORTH-EAST</text>
+          <text x="140" y="170" fill="rgba(0,180,255,0.2)" font-size="9" font-family="JetBrains Mono,monospace" letter-spacing="1">NORTH-CENTRAL</text>
+          <text x="30" y="285" fill="rgba(0,229,160,0.2)" font-size="9" font-family="JetBrains Mono,monospace" letter-spacing="1">SOUTH-WEST</text>
+          <text x="225" y="285" fill="rgba(0,229,160,0.2)" font-size="9" font-family="JetBrains Mono,monospace" letter-spacing="1">SOUTH-EAST</text>
+          <text x="150" y="350" fill="rgba(0,229,160,0.2)" font-size="9" font-family="JetBrains Mono,monospace" letter-spacing="1">SOUTH-SOUTH</text>
+
+          <!-- TRANSMISSION LINES (drawn first, behind nodes) -->
+          <!-- Kano to Abuja -->
+          <line x1="145" y1="105" x2="180" y2="195" stroke="rgba(0,180,255,0.35)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <!-- Kano to Maiduguri -->
+          <line x1="145" y1="105" x2="275" y2="95" stroke="rgba(0,180,255,0.25)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <!-- Sokoto to Kano -->
+          <line x1="75" y1="88" x2="145" y2="105" stroke="rgba(0,180,255,0.25)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <!-- Abuja to Lagos -->
+          <line x1="180" y1="195" x2="95" y2="305" stroke="rgba(0,229,160,0.45)" stroke-width="2" stroke-dasharray="0"/>
+          <!-- Abuja to Enugu -->
+          <line x1="180" y1="195" x2="255" y2="285" stroke="rgba(0,229,160,0.4)" stroke-width="1.8"/>
+          <!-- Abuja to Jos -->
+          <line x1="180" y1="195" x2="195" y2="155" stroke="rgba(0,180,255,0.3)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <!-- Jos to Maiduguri -->
+          <line x1="195" y1="155" x2="275" y2="95" stroke="rgba(0,180,255,0.2)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <!-- Lagos to Port Harcourt -->
+          <line x1="95" y1="305" x2="210" y2="355" stroke="rgba(0,229,160,0.4)" stroke-width="2"/>
+          <!-- Port Harcourt to Enugu -->
+          <line x1="210" y1="355" x2="255" y2="285" stroke="rgba(0,229,160,0.35)" stroke-width="1.8"/>
+          <!-- Enugu to Abuja -->
+          <line x1="255" y1="285" x2="180" y2="195" stroke="rgba(0,180,255,0.2)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <!-- Kano to Port Harcourt (long haul) -->
+          <line x1="145" y1="105" x2="210" y2="355" stroke="rgba(245,158,11,0.15)" stroke-width="1" stroke-dasharray="6,4"/>
+
+          <!-- NODE RINGS (pulse effect suggestion) -->
+          <circle cx="180" cy="195" r="30" fill="none" stroke="rgba(245,158,11,0.08)" stroke-width="1"/>
+          <circle cx="95" cy="305" r="28" fill="none" stroke="rgba(0,229,160,0.08)" stroke-width="1"/>
+          <circle cx="210" cy="355" r="22" fill="none" stroke="rgba(0,229,160,0.08)" stroke-width="1"/>
+
+          <!-- COMMAND CENTRE — ABUJA (largest) -->
+          <circle cx="180" cy="195" r="18" fill="rgba(245,158,11,0.12)" stroke="rgba(245,158,11,0.6)" stroke-width="1.5" filter="url(#glow)"/>
+          <circle cx="180" cy="195" r="8" fill="#F59E0B"/>
+          <text x="195" y="192" fill="#F59E0B" font-size="9" font-family="JetBrains Mono,monospace" font-weight="bold">FCT COMMAND</text>
+          <text x="195" y="203" fill="rgba(245,158,11,0.65)" font-size="8" font-family="JetBrains Mono,monospace">AMARA NEXUS HQ</text>
+
+          <!-- KANO HUB -->
+          <circle cx="145" cy="105" r="13" fill="rgba(0,180,255,0.1)" stroke="rgba(0,180,255,0.5)" stroke-width="1.5"/>
+          <circle cx="145" cy="105" r="6" fill="#00B4FF"/>
+          <text x="160" y="103" fill="#00B4FF" font-size="9" font-family="JetBrains Mono,monospace">KANO HUB</text>
+          <text x="160" y="113" fill="rgba(0,180,255,0.6)" font-size="7.5" font-family="JetBrains Mono,monospace">Solar + Wind</text>
+
+          <!-- SOKOTO NODE -->
+          <circle cx="75" cy="88" r="10" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.4)" stroke-width="1.5"/>
+          <circle cx="75" cy="88" r="5" fill="#F59E0B"/>
+          <text x="88" y="86" fill="rgba(245,158,11,0.9)" font-size="8.5" font-family="JetBrains Mono,monospace">SOKOTO</text>
+          <text x="88" y="96" fill="rgba(245,158,11,0.55)" font-size="7" font-family="JetBrains Mono,monospace">Solar Primary</text>
+
+          <!-- MAIDUGURI NODE -->
+          <circle cx="275" cy="95" r="10" fill="rgba(0,180,255,0.08)" stroke="rgba(0,180,255,0.4)" stroke-width="1.5"/>
+          <circle cx="275" cy="95" r="5" fill="#00B4FF"/>
+          <text x="234" y="85" fill="rgba(0,180,255,0.85)" font-size="8.5" font-family="JetBrains Mono,monospace">MAIDUGURI</text>
+          <text x="234" y="95" fill="rgba(0,180,255,0.55)" font-size="7" font-family="JetBrains Mono,monospace">Wind + Solar</text>
+
+          <!-- JOS NODE -->
+          <circle cx="195" cy="155" r="10" fill="rgba(0,229,160,0.08)" stroke="rgba(0,229,160,0.4)" stroke-width="1.5"/>
+          <circle cx="195" cy="155" r="5" fill="#00E5A0"/>
+          <text x="208" y="153" fill="rgba(0,229,160,0.85)" font-size="8.5" font-family="JetBrains Mono,monospace">JOS PLATEAU</text>
+          <text x="208" y="163" fill="rgba(0,229,160,0.55)" font-size="7" font-family="JetBrains Mono,monospace">Wind + Solar</text>
+
+          <!-- LAGOS MEGA HUB -->
+          <circle cx="95" cy="305" r="16" fill="rgba(0,229,160,0.1)" stroke="rgba(0,229,160,0.55)" stroke-width="1.5" filter="url(#glow)"/>
+          <circle cx="95" cy="305" r="7" fill="#00E5A0"/>
+          <text x="113" y="302" fill="#00E5A0" font-size="9" font-family="JetBrains Mono,monospace" font-weight="bold">LAGOS MEGA</text>
+          <text x="113" y="313" fill="rgba(0,229,160,0.6)" font-size="7.5" font-family="JetBrains Mono,monospace">Demand Centre</text>
+
+          <!-- ENUGU NODE -->
+          <circle cx="255" cy="285" r="11" fill="rgba(0,180,255,0.08)" stroke="rgba(0,180,255,0.4)" stroke-width="1.5"/>
+          <circle cx="255" cy="285" r="5" fill="#00B4FF"/>
+          <text x="215" y="278" fill="rgba(0,180,255,0.85)" font-size="8.5" font-family="JetBrains Mono,monospace">ENUGU</text>
+          <text x="215" y="288" fill="rgba(0,180,255,0.55)" font-size="7" font-family="JetBrains Mono,monospace">South-East Hub</text>
+
+          <!-- PORT HARCOURT HUB (gas) -->
+          <circle cx="210" cy="355" r="14" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.5)" stroke-width="1.5"/>
+          <circle cx="210" cy="355" r="6" fill="#3B82F6"/>
+          <text x="175" y="374" fill="#3B82F6" font-size="9" font-family="JetBrains Mono,monospace">PORT HARCOURT</text>
+          <text x="178" y="384" fill="rgba(59,130,246,0.6)" font-size="7.5" font-family="JetBrains Mono,monospace">Gas Hub + Export</text>
+
+          <!-- EXPORT ARROWS (right side) -->
+          <line x1="280" y1="200" x2="345" y2="175" stroke="rgba(245,158,11,0.3)" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
+          <line x1="280" y1="220" x2="345" y2="235" stroke="rgba(245,158,11,0.3)" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="290" y="172" fill="rgba(245,158,11,0.6)" font-size="7.5" font-family="JetBrains Mono,monospace">→ Benin/Togo</text>
+          <text x="290" y="232" fill="rgba(245,158,11,0.6)" font-size="7.5" font-family="JetBrains Mono,monospace">→ Niger/Chad</text>
+          <text x="285" y="202" fill="rgba(245,158,11,0.45)" font-size="7" font-family="JetBrains Mono,monospace">EXPORT</text>
+          <text x="285" y="212" fill="rgba(245,158,11,0.45)" font-size="7" font-family="JetBrains Mono,monospace">5,000 MW</text>
+
+          <!-- Border frame -->
+          <rect width="360" height="400" fill="none" stroke="rgba(0,180,255,0.1)" stroke-width="1" rx="8"/>
+        </svg>
+        <div class="map-legend">
+          <div class="ml-item"><div class="ml-dot" style="background:#F59E0B"></div>Command Centre</div>
+          <div class="ml-item"><div class="ml-dot" style="background:#00E5A0"></div>Mega Hub</div>
+          <div class="ml-item"><div class="ml-dot" style="background:#00B4FF"></div>Regional Hub</div>
+          <div class="ml-item"><div class="ml-dot" style="background:#3B82F6"></div>Gas Generation Hub</div>
+          <div class="ml-item"><div class="ml-dot" style="background:rgba(245,158,11,0.4);border:1px dashed #F59E0B;border-radius:2px;width:20px;height:2px"></div>Export Lines</div>
+        </div>
+      </div>
+      <div>
+        <div class="card fi" style="margin-bottom:16px">
+          <div class="cshine"></div>
+          <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;margin-bottom:14px">TRANSMISSION ARCHITECTURE</h3>
+          <div class="dr"><span class="drl">Primary voltage (national backbone)</span><span class="drv blue">330 kV / 765 kV</span></div>
+          <div class="dr"><span class="drl">Regional distribution voltage</span><span class="drv blue">132 kV</span></div>
+          <div class="dr"><span class="drl">Sub-distribution (urban)</span><span class="drv blue">33 kV / 11 kV</span></div>
+          <div class="dr"><span class="drl">Consumer delivery</span><span class="drv blue">415V / 240V</span></div>
+          <div class="dr"><span class="drl">Transmission redundancy</span><span class="drv green">N-1 minimum</span></div>
+          <div class="dr"><span class="drl">SCADA integration</span><span class="drv green">Full / Real-time</span></div>
+          <div class="dr"><span class="drl">Fibre optic backbone</span><span class="drv gold">National + Redundant</span></div>
+          <div class="dr"><span class="drl">New 765 kV lines (national)</span><span class="drv gold">4,500+ km</span></div>
+        </div>
+        <div class="card fi" style="margin-bottom:16px">
+          <div class="cshine"></div>
+          <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;margin-bottom:14px">SUBSTATION EQUIPMENT</h3>
+          <table class="spec-table">
+            <thead><tr><th>Component</th><th>Manufacturer</th><th>Spec</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td><strong>Power Transformers</strong></td><td>ABB / Siemens</td><td class="rec">400 MVA, 330kV</td></tr>
+              <tr class="hl"><td><strong>GIS Switchgear</strong></td><td>Schneider Electric</td><td class="rec">SF6-free, 420kV</td></tr>
+              <tr><td>Protection Relays</td><td>GE Grid Solutions</td><td style="color:var(--ts)">Multilin 650 series</td></tr>
+              <tr><td>FACTS Devices</td><td>ABB FACTS</td><td style="color:var(--ts)">SVC / STATCOM</td></tr>
+              <tr><td>Fibre OPGW</td><td>Prysmian Group</td><td style="color:var(--ts)">24-core, 330kV rated</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card fi">
+          <div class="cshine"></div>
+          <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;margin-bottom:14px">DISTRIBUTION UPGRADE (DisCos)</h3>
+          <p style="font-size:13px;color:var(--ts);line-height:1.7;margin-bottom:12px">All 11 DisCo networks to be re-cabled, re-metered, and integrated into AMARA NEXUS. Distribution automation to eliminate manual fault isolation — AMARA detects and reroutes within 200ms of fault occurrence.</p>
+          <div class="dr"><span class="drl">Distribution cable replacement</span><span class="drv gold">~18,000 km</span></div>
+          <div class="dr"><span class="drl">Distribution transformers (new/upgraded)</span><span class="drv gold">~12,000 units</span></div>
+          <div class="dr"><span class="drl">Auto fault isolation response</span><span class="drv green">&lt;200ms</span></div>
+          <div class="dr"><span class="drl">T&amp;D loss target (post-AMARA)</span><span class="drv green">&lt;8%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SMART TERMINAL -->
+<section id="terminal" style="background:var(--bg2)">
+  <div class="container">
+    <div class="seyebrow fi"><span class="snum">05</span><div class="sline"></div><span class="stag">Smart Metering</span></div>
+    <h2 class="stitle fi">AMARA <span class="blue">SMART TERMINAL</span></h2>
+    <p class="ssub fi">Nigeria's 50 million electricity consumers will be served by a new generation of IoT-enabled smart meters — the AMARA Smart Terminal. These are not upgrades of the existing prepaid infrastructure. They are a complete technological replacement: two-way communicating, tamper-detecting, AI-integrated devices that provide both the company and the consumer with complete, real-time transparency.</p>
+    <div class="g2 fi" style="align-items:start">
+      <div>
+        <div class="terminal-grid">
+          <div class="terminal-feat"><div class="tf-icon">📡</div><div><div class="tf-title">AMI Communication</div><div class="tf-desc">Advanced Metering Infrastructure — 4G/5G + RF Mesh. Two-way data flow between terminal and NEXUS. Real-time consumption push every 15 minutes.</div></div></div>
+          <div class="terminal-feat"><div class="tf-icon">🔒</div><div><div class="tf-title">Tamper Detection</div><div class="tf-desc">Magnetic field sensors, optical tamper detection, and current signature analysis detect bypass connections instantly. Automated alert to NEXUS and field teams.</div></div></div>
+          <div class="terminal-feat"><div class="tf-icon">⚡</div><div><div class="tf-title">Remote Connect/Disconnect</div><div class="tf-desc">Full remote control of supply. Customer can toggle power from the AMARA Connect app. Operators can disconnect non-paying accounts instantly — no field visit required.</div></div></div>
+          <div class="terminal-feat"><div class="tf-icon">📊</div><div><div class="tf-title">Granular Consumption Data</div><div class="tf-desc">Appliance-level load profiling via smart circuit integration. 15-minute interval data. Historical consumption, peak usage analysis, and anomaly detection.</div></div></div>
+          <div class="terminal-feat"><div class="tf-icon">🏠</div><div><div class="tf-title">Smart Circuit Integration</div><div class="tf-desc">Links to AMARA Smart Circuit Box in the consumer's premises. Individual socket/circuit monitoring. Fault detection within the home network reported to the app.</div></div></div>
+          <div class="terminal-feat"><div class="tf-icon">🔐</div><div><div class="tf-title">Blockchain Audit Trail</div><div class="tf-desc">Every transaction — top-up, consumption record, tariff change — is immutably recorded on AMARA's private blockchain. Fraud-proof billing. Consumer-verifiable records.</div></div></div>
+          <div class="terminal-feat"><div class="tf-icon">🔋</div><div><div class="tf-title">Battery Backup</div><div class="tf-desc">Internal 72-hour backup battery ensures metering continues during outages. Consumption records preserved. Automatic sync on reconnection.</div></div></div>
+          <div class="terminal-feat"><div class="tf-icon">🌐</div><div><div class="tf-title">DLMS/COSEM Compliant</div><div class="tf-desc">International Device Language Message Specification standard. Interoperable, standardised data format. Future-proof architecture compatible with ECOWAS smart grid evolution.</div></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="card fi" style="margin-bottom:16px">
+          <div class="cshine"></div>
+          <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;margin-bottom:14px">REFERENCE MANUFACTURERS</h3>
+          <table class="spec-table">
+            <thead><tr><th>Manufacturer</th><th>Product Line</th><th>Unit Cost (bulk)</th><th>Rec.</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td><strong>Landis+Gyr</strong></td><td>E360 Smart Meter</td><td class="price">$95–115</td><td class="rec">★ PRIMARY</td></tr>
+              <tr class="hl"><td><strong>Itron</strong></td><td>OpenWay Riva</td><td class="price">$90–110</td><td class="rec">★ PRIMARY</td></tr>
+              <tr><td>Honeywell Elster</td><td>Rex2 AMI</td><td class="price">$100–120</td><td style="color:var(--ts)">Secondary</td></tr>
+              <tr><td>Huawei Digital</td><td>iMeter Smart</td><td class="price">$75–95</td><td style="color:var(--ts)">Cost option</td></tr>
+              <tr><td>Siemens</td><td>SIMARIS design</td><td class="price">$110–130</td><td style="color:var(--ts)">Industrial</td></tr>
+            </tbody>
+          </table>
+          <div class="co co-gold" style="margin-top:12px;padding:10px 14px">
+            <div class="colbl">Total Procurement Estimate</div>
+            <div class="cotxt" style="font-size:12px">50 million units × $100 avg (bulk) = <strong>$5 billion</strong>. Phased: Phase 1 = 15M units ($1.5B). Phase 2 = 20M units ($2B). Phase 3 = 15M units ($1.5B). Local assembly partnership with selected OEM strongly recommended to reduce cost and create manufacturing employment.</div>
+          </div>
+        </div>
+        <div class="card fi">
+          <div class="cshine"></div>
+          <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;margin-bottom:14px">ROLLOUT STRATEGY</h3>
+          <div class="dr"><span class="drl">Phase 1 Priority Zones</span><span class="drv blue">Band A commercial &amp; Lagos/Abuja/PH</span></div>
+          <div class="dr"><span class="drl">Phase 1 Meters</span><span class="drv gold">15 million units</span></div>
+          <div class="dr"><span class="drl">Installation target per team/day</span><span class="drv green">25 units</span></div>
+          <div class="dr"><span class="drl">Teams required Phase 1</span><span class="drv blue">~2,400 teams</span></div>
+          <div class="dr"><span class="drl">Phase 1 rollout duration</span><span class="drv blue">18 months</span></div>
+          <div class="dr"><span class="drl">Full national rollout</span><span class="drv gold">36 months</span></div>
+          <div class="co co-blue" style="margin-top:12px;padding:10px 14px">
+            <div class="colbl">Anti-Corruption By Design</div>
+            <div class="cotxt" style="font-size:12px">Every AMARA Smart Terminal is addressed with a unique cryptographic serial number registered on the NEXUS blockchain at manufacture. Tampering, removal, or bypassing triggers an immediate alert. <strong>There is no analog gap for corruption to exploit.</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEXUS AI SYSTEM -->
+<section id="nexus">
+  <div class="container">
+    <div class="seyebrow fi"><span class="snum">06</span><div class="sline"></div><span class="stag">The Intelligence Layer</span></div>
+    <h2 class="stitle fi">AMARA <span class="blue">NEXUS</span> — THE BRAIN</h2>
+    <p class="ssub fi">AMARA NEXUS is the AI operating system that governs the entire grid. It is not a monitoring dashboard — it is an autonomous decision-making system that continuously optimises power distribution, detects faults before they cascade, prevents fraud in real time, and communicates the state of the grid to every stakeholder level simultaneously. Humans are in the loop for escalation. NEXUS is in the loop for everything.</p>
+    <div class="g2 fi" style="align-items:start">
+      <div>
+        <div class="nexus-layer" style="border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.04)">
+          <div class="nexus-icon" style="background:rgba(245,158,11,0.12)">🏛️</div>
+          <div>
+            <div class="nexus-title">Layer 0 — Physical Grid Infrastructure</div>
+            <div class="nexus-desc">All generation assets, transformers, substations, transmission lines, and AMARA Smart Terminals. Every physical component communicates state to NEXUS in real time via fibre and 5G redundant channels.</div>
+            <div class="nexus-tags"><span class="nexus-tag" style="color:var(--gold);background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2)">IoT Sensors</span><span class="nexus-tag" style="color:var(--gold);background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2)">Smart Terminals</span><span class="nexus-tag" style="color:var(--gold);background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2)">SCADA RTUs</span><span class="nexus-tag" style="color:var(--gold);background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2)">Phasor PMUs</span></div>
+          </div>
+        </div>
+        <div class="nexus-conn"><div class="nexus-conn-line"></div></div>
+        <div class="nexus-layer">
+          <div class="nexus-icon" style="background:var(--blue-soft)">📡</div>
+          <div>
+            <div class="nexus-title">Layer 1 — Edge Intelligence (Distributed)</div>
+            <div class="nexus-desc">Edge computing units at every substation and major node. Local processing reduces central system load and enables sub-200ms fault response without round-trip latency to the data centre.</div>
+            <div class="nexus-tags"><span class="nexus-tag">Edge AI Nodes</span><span class="nexus-tag">Fault Isolation</span><span class="nexus-tag">Local Automation</span><span class="nexus-tag">5G Gateways</span></div>
+          </div>
+        </div>
+        <div class="nexus-conn"><div class="nexus-conn-line"></div></div>
+        <div class="nexus-layer">
+          <div class="nexus-icon" style="background:var(--blue-soft)">🧠</div>
+          <div>
+            <div class="nexus-title">Layer 2 — NEXUS Core (AI Engine)</div>
+            <div class="nexus-desc">The central intelligence. Real-time grid state estimation, demand forecasting (LSTM neural networks), dynamic routing optimisation, anomaly detection, and anti-fraud pattern recognition. Processes 50,000+ data points per second across the national grid.</div>
+            <div class="nexus-tags"><span class="nexus-tag">LSTM Forecasting</span><span class="nexus-tag">Graph Neural Net Routing</span><span class="nexus-tag">Anomaly Detection</span><span class="nexus-tag">Auto-Scaling</span></div>
+          </div>
+        </div>
+        <div class="nexus-conn"><div class="nexus-conn-line"></div></div>
+        <div class="nexus-layer">
+          <div class="nexus-icon" style="background:var(--blue-soft)">🔐</div>
+          <div>
+            <div class="nexus-title">Layer 3 — Security &amp; Compliance Engine</div>
+            <div class="nexus-desc">Military-grade cybersecurity for national critical infrastructure. Zero-trust architecture, AES-256 data encryption, end-to-end TLS 1.3, intrusion detection, and blockchain payment immutability. Compliant with ISO 27001, IEC 62351, NERC CIP standards.</div>
+            <div class="nexus-tags"><span class="nexus-tag">AES-256</span><span class="nexus-tag">Zero Trust</span><span class="nexus-tag">IEC 62351</span><span class="nexus-tag">Blockchain Ledger</span></div>
+          </div>
+        </div>
+        <div class="nexus-conn"><div class="nexus-conn-line"></div></div>
+        <div class="nexus-layer" style="border-color:rgba(0,229,160,0.25);background:rgba(0,229,160,0.03)">
+          <div class="nexus-icon" style="background:rgba(0,229,160,0.1)">🌐</div>
+          <div>
+            <div class="nexus-title">Layer 4 — Platform API &amp; Interface Layer</div>
+            <div class="nexus-desc">The bridge between NEXUS and the three AMARA platforms (Connect, Ops, Command). GraphQL API with WebSocket real-time channels. Sub-100ms latency from grid event to consumer notification. Third-party integration APIs for banks, government, and export partners.</div>
+            <div class="nexus-tags"><span class="nexus-tag" style="color:var(--green);background:rgba(0,229,160,0.08);border-color:rgba(0,229,160,0.2)">GraphQL API</span><span class="nexus-tag" style="color:var(--green);background:rgba(0,229,160,0.08);border-color:rgba(0,229,160,0.2)">WebSocket RT</span><span class="nexus-tag" style="color:var(--green);background:rgba(0,229,160,0.08);border-color:rgba(0,229,160,0.2)">REST APIs</span><span class="nexus-tag" style="color:var(--green);background:rgba(0,229,160,0.08);border-color:rgba(0,229,160,0.2)">Banking Integrations</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card fi" style="margin-bottom:16px">
+          <div class="cshine"></div>
+          <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;margin-bottom:14px">NEXUS CORE CAPABILITIES</h3>
+          <div class="dr"><span class="drl">Grid data points processed/second</span><span class="drv blue">50,000+</span></div>
+          <div class="dr"><span class="drl">Fault detection to isolation response</span><span class="drv green">&lt;200ms</span></div>
+          <div class="dr"><span class="drl">Demand forecast accuracy (24hr)</span><span class="drv green">97.3%+</span></div>
+          <div class="dr"><span class="drl">Load balancing automation</span><span class="drv blue">Continuous</span></div>
+          <div class="dr"><span class="drl">Fraud detection rate (target)</span><span class="drv green">&gt;99%</span></div>
+          <div class="dr"><span class="drl">System uptime SLA</span><span class="drv green">99.97%</span></div>
+          <div class="dr"><span class="drl">Data centre locations (min.)</span><span class="drv gold">3 (Abuja/Lagos/PH)</span></div>
+          <div class="dr"><span class="drl">Backup data centre (DR)</span><span class="drv gold">1 (North-East zone)</span></div>
+        </div>
+        <div class="card fi" style="margin-bottom:16px">
+          <div class="cshine"></div>
+          <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;margin-bottom:14px">INFRASTRUCTURE STACK</h3>
+          <table class="spec-table">
+            <thead><tr><th>Component</th><th>Technology</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td><strong>Grid OS / SCADA</strong></td><td>OSIsoft PI + custom AMARA layer</td></tr>
+              <tr><td>AI/ML Framework</td><td>PyTorch + TensorFlow (edge)</td></tr>
+              <tr><td>Data Streaming</td><td>Apache Kafka (50K events/sec)</td></tr>
+              <tr><td>Time-Series DB</td><td>InfluxDB + TimescaleDB</td></tr>
+              <tr><td>Blockchain (payments)</td><td>Hyperledger Fabric (permissioned)</td></tr>
+              <tr><td>API Gateway</td><td>Kong Enterprise</td></tr>
+              <tr><td>Cloud Infrastructure</td><td>On-premise (sovereign) + AWS GovCloud backup</td></tr>
+              <tr class="hl"><td><strong>Data Centre Hardware</strong></td><td>Dell PowerEdge / HPE ProLiant</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="co co-blue fi">
+          <div class="colbl">NEXUS Anti-Corruption Architecture</div>
+          <div class="cotxt">Every payment, every unit consumed, every tariff applied, every grid event — all recorded on an immutable blockchain ledger. <strong>No DisCo employee, no government official, and no system administrator can alter a billing record without a traceable, time-stamped, cryptographically-signed audit trail.</strong> This is how AMARA makes corruption structurally impossible at the billing layer.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INVESTMENT -->
+<section id="investment" style="background:var(--bg2)">
+  <div class="container">
+    <div class="seyebrow fi"><span class="snum">07</span><div class="sline"></div><span class="stag">Financial Model</span></div>
+    <h2 class="stitle fi">CAPITAL &amp; <span class="gold">REVENUE</span> ARCHITECTURE</h2>
+    <p class="ssub fi">AMARA is not a public spending programme. It is a commercial infrastructure investment with a 25-year revenue horizon exceeding $244 billion in cumulative receipts. The capital required is significant — but so is the return. Below is a transparent breakdown of investment requirements, phased deployment costs, and projected revenue.</p>
+
+    <div class="g2 fi" style="margin-bottom:24px">
+      <div class="cw">
+        <div class="ct">Capital Expenditure Breakdown by Category &amp; Phase ($B)</div>
+        <div class="cs">Total CapEx: $68–96B over three phases (10–12 years)</div>
+        <div class="ch2"><canvas id="cCapex"></canvas></div>
+        <div class="csrc">* Phase 1 ($18–22B) targets Dangote Group + IFC + AfDB + Green Bond funding</div>
+      </div>
+      <div class="cw">
+        <div class="ct">25-Year Revenue Projection ($B) — Annual &amp; Cumulative</div>
+        <div class="cs">Based on 60% capacity factor, avg. tariff $0.065/kWh + export premium</div>
+        <div class="ch2"><canvas id="cRevenue"></canvas></div>
+        <div class="csrc">* Year 3 breakeven on Phase 1. Cumulative revenue exceeds total CapEx by Year 10.</div>
+      </div>
+    </div>
+
+    <div class="g3 fi">
+      <div class="card">
+        <div class="cshine"></div>
+        <h3 style="font-family:var(--fd);font-size:18px;letter-spacing:2px;color:var(--gold);margin-bottom:14px">PHASE 1 — CAPITAL STACK</h3>
+        <div class="dr"><span class="drl">Dangote Group (lead investor)</span><span class="drv gold">$6–8B</span></div>
+        <div class="dr"><span class="drl">IFC / World Bank Group</span><span class="drv gold">$3–4B</span></div>
+        <div class="dr"><span class="drl">African Development Bank</span><span class="drv gold">$2–3B</span></div>
+        <div class="dr"><span class="drl">Green Bond / Climate Finance</span><span class="drv green">$3–4B</span></div>
+        <div class="dr"><span class="drl">FGN Strategic Co-investment</span><span class="drv blue">$2–3B</span></div>
+        <div class="dr" style="border-top:1px solid var(--ba);margin-top:8px;padding-top:12px">
+          <span class="drl" style="font-weight:600;color:var(--tp)">Phase 1 Total</span>
+          <span class="drv gold" style="font-size:16px">$18–22B</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="cshine"></div>
+        <h3 style="font-family:var(--fd);font-size:18px;letter-spacing:2px;color:var(--blue);margin-bottom:14px">RETURNS PROFILE</h3>
+        <div class="dr"><span class="drl">Phase 1 annual revenue (10,000 MW)</span><span class="drv green">$5.5–6.5B</span></div>
+        <div class="dr"><span class="drl">Phase 1 breakeven (est.)</span><span class="drv green">Year 3–4</span></div>
+        <div class="dr"><span class="drl">Phase 1 IRR (unlevered est.)</span><span class="drv green">18–24%</span></div>
+        <div class="dr"><span class="drl">Full build annual revenue</span><span class="drv gold">$14–15B</span></div>
+        <div class="dr"><span class="drl">25-year cumulative revenue</span><span class="drv gold">$244B+</span></div>
+        <div class="dr"><span class="drl">Export revenue (5,000 MW)</span><span class="drv green">$1.5–2B/yr</span></div>
+      </div>
+      <div class="card">
+        <div class="cshine"></div>
+        <h3 style="font-family:var(--fd);font-size:18px;letter-spacing:2px;color:var(--green);margin-bottom:14px">ESG &amp; IMPACT CAPITAL</h3>
+        <p style="font-size:13px;color:var(--ts);line-height:1.7;margin-bottom:12px">AMARA qualifies for multiple green finance instruments given its solar-dominant, fossil-reducing mandate.</p>
+        <div class="dr"><span class="drl">IFC Climate Finance</span><span class="drv green">Eligible</span></div>
+        <div class="dr"><span class="drl">AfDB SEFA Grant/Loan</span><span class="drv green">Eligible</span></div>
+        <div class="dr"><span class="drl">Green Bond Market</span><span class="drv green">$3–5B issuable</span></div>
+        <div class="dr"><span class="drl">EU Carbon Credits (CBAM)</span><span class="drv green">Revenue stream</span></div>
+        <div class="dr"><span class="drl">USAID/Power Africa</span><span class="drv blue">Technical assistance</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENVIRONMENTAL -->
+<section id="environment">
+  <div class="container">
+    <div class="seyebrow fi"><span class="snum">08</span><div class="sline"></div><span class="stag">Environmental Impact</span></div>
+    <h2 class="stitle fi">CARBON <span class="green">TRANSFORMATION</span></h2>
+    <p class="ssub fi">AMARA's most immediate environmental impact is the elimination of Nigeria's massive diesel generator economy — the largest unregulated source of CO₂ in sub-Saharan Africa. The full AMARA Grid, at 30,000 MW with a solar-dominant mix, avoids an estimated 76 million tonnes of CO₂ per year compared to the current diesel-dependent status quo.</p>
+    <div class="g2 fi">
+      <div class="cw">
+        <div class="ct">Annual CO₂ Avoided by Sector (Million Tonnes/Year — Full Deployment)</div>
+        <div class="cs">Total: 76 million tonnes CO₂ avoided annually vs. current trajectory</div>
+        <div class="ch2"><canvas id="cCO2"></canvas></div>
+        <div class="csrc">* Source: Nigerian Energy Commission, IEA Africa Outlook 2024, AMARA projections</div>
+      </div>
+      <div>
+        <div class="card fi" style="margin-bottom:16px">
+          <div class="cshine"></div>
+          <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;margin-bottom:14px;color:var(--green)">ENVIRONMENTAL METRICS</h3>
+          <div class="dr"><span class="drl">CO₂ avoided annually (full build)</span><span class="drv green">76M tonnes</span></div>
+          <div class="dr"><span class="drl">Diesel litres eliminated (annual est.)</span><span class="drv green">28B litres</span></div>
+          <div class="dr"><span class="drl">Equivalent trees planted</span><span class="drv green">3.5B trees/yr</span></div>
+          <div class="dr"><span class="drl">Air quality improvement (PM2.5)</span><span class="drv green">Significant urban</span></div>
+          <div class="dr"><span class="drl">Carbon credit revenue potential</span><span class="drv gold">$760M–2.3B/yr</span></div>
+          <div class="dr"><span class="drl">Nigeria NDC target contribution</span><span class="drv green">Exceeds 2030 target</span></div>
+        </div>
+        <div class="card fi">
+          <div class="cshine"></div>
+          <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;margin-bottom:14px">AGRIVOLTAIC STRATEGY</h3>
+          <p style="font-size:13px;color:var(--ts);line-height:1.7;margin-bottom:12px">AMARA Solar Farms in the north are designed for agrivoltaic co-location — solar panels mounted at height that allows simultaneous crop cultivation beneath. This addresses land-use concerns while boosting agricultural productivity (shade reduces crop water stress in high-heat zones).</p>
+          <div class="dr"><span class="drl">Agrivoltaic land available (North)</span><span class="drv green">60%+ of solar sites</span></div>
+          <div class="dr"><span class="drl">Crop yield improvement (shade benefit)</span><span class="drv green">+15–30%</span></div>
+          <div class="dr"><span class="drl">Irrigation power from solar panels</span><span class="drv blue">Integrated design</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPORT -->
+<section id="export" style="background:var(--bg2)">
+  <div class="container">
+    <div class="seyebrow fi"><span class="snum">09</span><div class="sline"></div><span class="stag">Regional Export Strategy</span></div>
+    <h2 class="stitle fi">BEYOND NIGERIA: <span class="gold">POWERING WEST AFRICA</span></h2>
+    <p class="ssub fi">At full build-out, AMARA Grid generates surplus capacity that positions Nigeria as West Africa's primary electricity exporter through the ECOWAS/WAPP interconnection framework. This transforms Nigeria from a power-deficit nation to a continental power broker — adding a second revenue stream that strengthens every investment metric in the model.</p>
+    <div class="g3 fi">
+      <div class="card">
+        <div class="cshine"></div>
+        <div style="font-size:28px;margin-bottom:12px">🇧🇯🇹🇬</div>
+        <h3 style="font-family:var(--fd);font-size:18px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">BENIN &amp; TOGO</h3>
+        <p style="font-size:13px;color:var(--ts);line-height:1.7;margin-bottom:10px">Direct interconnect from Lagos hub. Nigeria already supplies limited power to Benin via NEPA-era lines. AMARA upgrades this to a 500 MW+ commercial supply agreement.</p>
+        <div class="dr"><span class="drl">Export target</span><span class="drv gold">500–800 MW</span></div>
+        <div class="dr"><span class="drl">Interconnect type</span><span class="drv blue">330 kV DC link</span></div>
+        <div class="dr"><span class="drl">Annual revenue potential</span><span class="drv green">$180–290M</span></div>
+      </div>
+      <div class="card">
+        <div class="cshine"></div>
+        <div style="font-size:28px;margin-bottom:12px">🇳🇪🇹🇩</div>
+        <h3 style="font-family:var(--fd);font-size:18px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">NIGER &amp; CHAD</h3>
+        <p style="font-size:13px;color:var(--ts);line-height:1.7;margin-bottom:10px">Northern grid nodes (Kano, Maiduguri, Sokoto) serve as natural gateway to landlocked Sahel neighbours with critical electricity needs and zero domestic generation capacity.</p>
+        <div class="dr"><span class="drl">Export target</span><span class="drv gold">800–1,200 MW</span></div>
+        <div class="dr"><span class="drl">Interconnect requirement</span><span class="drv blue">New 330 kV line</span></div>
+        <div class="dr"><span class="drl">Annual revenue potential</span><span class="drv green">$290–440M</span></div>
+      </div>
+      <div class="card">
+        <div class="cshine"></div>
+        <div style="font-size:28px;margin-bottom:12px">🇬🇭🇨🇮</div>
+        <h3 style="font-family:var(--fd);font-size:18px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">GHANA &amp; CÔTE D'IVOIRE</h3>
+        <p style="font-size:13px;color:var(--ts);line-height:1.7;margin-bottom:10px">WAPP (West African Power Pool) western interconnect. Ghana and Côte d'Ivoire face periodic power deficits. AMARA becomes a backup/peak-shaving supplier for West Africa's second-largest economies.</p>
+        <div class="dr"><span class="drl">Export target (Phase 3)</span><span class="drv gold">1,500–2,500 MW</span></div>
+        <div class="dr"><span class="drl">Framework</span><span class="drv blue">WAPP / ECOWAS</span></div>
+        <div class="dr"><span class="drl">Annual revenue potential</span><span class="drv green">$550M–920M</span></div>
+      </div>
+    </div>
+    <div class="co co-gold fi" style="margin-top:24px">
+      <div class="colbl">Strategic Positioning</div>
+      <div class="cotxt">Combined export capacity of 5,000 MW across all ECOWAS export lines generates <strong>$1.5–2.2 billion annually</strong> in export revenue. This positions Nigeria as the energy anchor of West Africa — a role that reinforces diplomatic leverage, regional trade dominance, and the commercial returns of AMARA's investors simultaneously.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline">
+  <div class="container">
+    <div class="seyebrow fi"><span class="snum">10</span><div class="sline"></div><span class="stag">Project Timeline</span></div>
+    <h2 class="stitle fi">10-YEAR <span class="blue">DEPLOYMENT ROADMAP</span></h2>
+    <p class="ssub fi">AMARA Grid is deployed in four structured phases, each building on the last. Every phase delivers operational capacity and revenue before the next begins. No phase is purely preparatory — each adds megawatts, terminals, and platform users from day one of that phase's commissioning.</p>
+    <div class="phase-track fi">
+      <div class="phase-item">
+        <div class="phase-dot done"><div class="phase-dot-inner"></div></div>
+        <div class="phase-label">
+          <div class="phase-num" style="color:var(--green)">0</div>
+          <div class="phase-name">FOUNDATION</div>
+          <div class="phase-years">Year 0 — 12 months</div>
+          <div class="phase-mw" style="color:var(--ts);font-size:14px">Pre-Deployment</div>
+          <div class="phase-items">
+            <div class="phase-item-tag">EIA surveys — all 6 zones</div>
+            <div class="phase-item-tag">Land acquisition + legal</div>
+            <div class="phase-item-tag">NERC regulatory approvals</div>
+            <div class="phase-item-tag">Procurement contracts signed</div>
+            <div class="phase-item-tag">NEXUS architecture design</div>
+            <div class="phase-item-tag">Team recruitment begins</div>
+          </div>
+        </div>
+      </div>
+      <div class="phase-item">
+        <div class="phase-dot"><div class="phase-dot-inner"></div></div>
+        <div class="phase-label">
+          <div class="phase-num">1</div>
+          <div class="phase-name">IGNITION</div>
+          <div class="phase-years">Year 1–4 (36 months active)</div>
+          <div class="phase-mw">10,000 MW</div>
+          <div class="phase-items">
+            <div class="phase-item-tag">Lagos + Abuja + PH priority</div>
+            <div class="phase-item-tag">4,000 MW solar (Sokoto/Kano)</div>
+            <div class="phase-item-tag">3,500 MW CCGT (Delta/Rivers)</div>
+            <div class="phase-item-tag">15M Smart Terminals deployed</div>
+            <div class="phase-item-tag">NEXUS Core v1.0 live</div>
+            <div class="phase-item-tag">AMARA Connect app launch</div>
+          </div>
+        </div>
+      </div>
+      <div class="phase-item">
+        <div class="phase-dot"><div class="phase-dot-inner"></div></div>
+        <div class="phase-label">
+          <div class="phase-num">2</div>
+          <div class="phase-name">EXPANSION</div>
+          <div class="phase-years">Year 4–7 (36 months)</div>
+          <div class="phase-mw">20,000 MW</div>
+          <div class="phase-items">
+            <div class="phase-item-tag">National coverage achieved</div>
+            <div class="phase-item-tag">+8,000 MW solar (all zones)</div>
+            <div class="phase-item-tag">Mambilla hydro integration</div>
+            <div class="phase-item-tag">Export lines to Benin/Niger</div>
+            <div class="phase-item-tag">20M additional terminals</div>
+            <div class="phase-item-tag">NEXUS full AI deployment</div>
+          </div>
+        </div>
+      </div>
+      <div class="phase-item">
+        <div class="phase-dot"><div class="phase-dot-inner"></div></div>
+        <div class="phase-label">
+          <div class="phase-num">3</div>
+          <div class="phase-name">DOMINANCE</div>
+          <div class="phase-years">Year 7–10 (36 months)</div>
+          <div class="phase-mw">30,000+ MW</div>
+          <div class="phase-items">
+            <div class="phase-item-tag">Full 30,000 MW operational</div>
+            <div class="phase-item-tag">5,000 MW West Africa export</div>
+            <div class="phase-item-tag">50M terminals completed</div>
+            <div class="phase-item-tag">NEXUS self-learning mature</div>
+            <div class="phase-item-tag">All three platforms full prod.</div>
+            <div class="phase-item-tag">Carbon credit programme live</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team" style="background:var(--bg2)">
+  <div class="container">
+    <div class="seyebrow fi"><span class="snum">11</span><div class="sline"></div><span class="stag">Professional Requirements</span></div>
+    <h2 class="stitle fi">THE <span class="blue">TEAM</span> REQUIRED</h2>
+    <p class="ssub fi">A project of this magnitude requires professionals across every discipline from civil engineering to artificial intelligence. Below is a structured breakdown of the positions required at each phase — including specialist roles Nigeria may need to source internationally, with recommendations for knowledge transfer programmes to build domestic capacity throughout the project lifecycle.</p>
+
+    <div class="team-category fi">
+      <div class="tc-header">ENGINEERING &amp; PHYSICAL INFRASTRUCTURE</div>
+      <div class="team-grid">
+        <div class="team-role"><div class="tr-title">Lead Power Systems Engineers</div><div class="tr-count">×50+ senior</div><div class="tr-note">CCGT, HVDC, grid design specialists. International sourcing: GE/Siemens alumni pool.</div></div>
+        <div class="team-role"><div class="tr-title">Civil &amp; Structural Engineers</div><div class="tr-count">×1,000+</div><div class="tr-note">Substation buildings, solar farm foundations, transmission tower civil works.</div></div>
+        <div class="team-role"><div class="tr-title">Electrical Engineers (HV)</div><div class="tr-count">×500+</div><div class="tr-note">330kV+ systems. Protection and relay specialists. Substation commissioning.</div></div>
+        <div class="team-role"><div class="tr-title">Solar PV Installation Engineers</div><div class="tr-count">×2,000+</div><div class="tr-note">Utility-scale PV mounting, cabling, inverter commissioning. Certifiable on-site.</div></div>
+        <div class="team-role"><div class="tr-title">SCADA / Control Systems Engineers</div><div class="tr-count">×150+</div><div class="tr-note">OSIsoft PI, ABB 800xA, Siemens SINAUT. Critical NEXUS integration role.</div></div>
+        <div class="team-role"><div class="tr-title">Environmental Impact Specialists</div><div class="tr-count">×200+</div><div class="tr-note">EIA/EMP for all 6 zones. Agrivoltaic land-use assessment. Biodiversity surveys.</div></div>
+        <div class="team-role"><div class="tr-title">Land Surveyors</div><div class="tr-count">×500+</div><div class="tr-note">Route surveys, substation site surveys, solar farm boundary definition.</div></div>
+        <div class="team-role"><div class="tr-title">Gas Pipeline Engineers</div><div class="tr-count">×100+</div><div class="tr-note">Gas supply routing to CCGT sites. Integration with NNPC gas supply infrastructure.</div></div>
+        <div class="team-role"><div class="tr-title">Transmission Line Construction Crews</div><div class="tr-count">×5,000+</div><div class="tr-note">Tower erection, conductor stringing, OPGW installation across 4,500+ km new lines.</div></div>
+      </div>
+    </div>
+
+    <div class="team-category fi">
+      <div class="tc-header">TECHNOLOGY, AI &amp; DIGITAL INFRASTRUCTURE</div>
+      <div class="team-grid">
+        <div class="team-role"><div class="tr-title">Lead AI/ML Engineers</div><div class="tr-count">×30+ senior</div><div class="tr-note">LSTM grid forecasting, GNN routing optimisation, anomaly detection models.</div></div>
+        <div class="team-role"><div class="tr-title">Full-Stack Platform Engineers</div><div class="tr-count">×200+</div><div class="tr-note">AMARA Connect, Ops, Command. React Native + Node.js + GraphQL stack.</div></div>
+        <div class="team-role"><div class="tr-title">Cybersecurity Architects</div><div class="tr-count">×40+</div><div class="tr-note">IEC 62351, NERC CIP, zero-trust architecture for national critical infrastructure.</div></div>
+        <div class="team-role"><div class="tr-title">Data Engineers</div><div class="tr-count">×80+</div><div class="tr-note">Kafka pipelines, InfluxDB management, real-time ETL at 50,000 events/second.</div></div>
+        <div class="team-role"><div class="tr-title">Smart Terminal Field Engineers</div><div class="tr-count">×3,000+</div><div class="tr-note">AMI deployment and commissioning teams across all 11 DisCo territories.</div></div>
+        <div class="team-role"><div class="tr-title">Blockchain Developers</div><div class="tr-count">×20+</div><div class="tr-note">Hyperledger Fabric for immutable billing ledger. Smart contract audit specialists.</div></div>
+      </div>
+    </div>
+
+    <div class="team-category fi">
+      <div class="tc-header">PROJECT MANAGEMENT, LEGAL &amp; OPERATIONS</div>
+      <div class="team-grid">
+        <div class="team-role"><div class="tr-title">Senior Project Managers</div><div class="tr-count">×100+</div><div class="tr-note">Phased construction management across 6 geopolitical zones simultaneously.</div></div>
+        <div class="team-role"><div class="tr-title">Regulatory &amp; Compliance Lawyers</div><div class="tr-count">×30+</div><div class="tr-note">NERC compliance, NNPC gas agreements, land use act navigation, ECOWAS export.</div></div>
+        <div class="team-role"><div class="tr-title">Financial &amp; Investment Analysts</div><div class="tr-count">×50+</div><div class="tr-note">Phase-by-phase CapEx tracking, revenue modelling, green bond management.</div></div>
+        <div class="team-role"><div class="tr-title">Operations Centre Controllers</div><div class="tr-count">×300+</div><div class="tr-note">24/7 AMARA Command operators across 4 national control centres.</div></div>
+        <div class="team-role"><div class="tr-title">Field Maintenance Technicians</div><div class="tr-count">×5,000+</div><div class="tr-note">Distributed across 36 states. NEXUS-dispatched for physical fault resolution.</div></div>
+        <div class="team-role"><div class="tr-title">Customer Experience Team</div><div class="tr-count">×500+</div><div class="tr-note">AMARA Ops platform operators. AI-augmented customer support for 50M users.</div></div>
+      </div>
+    </div>
+
+    <div class="co co-blue fi">
+      <div class="colbl">Nigerian Talent Strategy</div>
+      <div class="cotxt">AMARA's staffing model prioritises Nigerian professionals at every level. Where international expertise is needed (specialist SCADA engineers, GNN AI researchers, HVDC specialists), structured knowledge transfer programmes are embedded in all international contracts — <strong>every foreign specialist must train 3 Nigerian counterparts</strong>. Within 5 years of Phase 1 commissioning, 90% of operational roles target Nigerian nationals exclusively. This project does not just build a grid. It builds the workforce that runs it.</div>
+    </div>
+  </div>
+</section>
+
+<!-- BRIDGE TO DOSSIER 3 -->
+<section id="bridge">
+  <div class="container" style="text-align:center">
+    <div class="seyebrow fi" style="justify-content:center"><span class="snum">12</span><div class="sline"></div><span class="stag">What's Next</span></div>
+    <h2 class="stitle fi" style="text-align:center">THE GRID IS <span class="blue">BUILT</span>.<br>NOW IT NEEDS A <span class="green">VOICE</span>.</h2>
+    <p class="ssub fi" style="text-align:center;margin:0 auto 48px">Dossier II has specified the physical and intelligent infrastructure of AMARA Grid. Dossier III introduces the three platforms that communicate this system to the world — AMARA Connect for consumers, AMARA Ops for staff, and AMARA Command for management. The grid generates power. The platforms deliver trust.</p>
+    <div class="g3 fi" style="text-align:left">
+      <div class="card" style="border-color:rgba(0,229,160,0.2)">
+        <div style="font-size:32px;margin-bottom:12px">📱</div>
+        <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;color:var(--green);margin-bottom:8px">AMARA CONNECT</h3>
+        <p style="font-size:13px;color:var(--ts);line-height:1.7">Consumer-facing mobile + desktop platform. Remote power control, real-time consumption, payment, family accounts, grid status, safety tips, and smart circuit monitoring. 50M users. Full dark/light mode. Nigerian payment integration.</p>
+      </div>
+      <div class="card" style="border-color:rgba(0,180,255,0.2)">
+        <div style="font-size:32px;margin-bottom:12px">🖥️</div>
+        <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;color:var(--blue);margin-bottom:8px">AMARA OPS</h3>
+        <p style="font-size:13px;color:var(--ts);line-height:1.7">Staff-facing desktop platform. Grid-linked ticket system, NEXUS AI directives, field team dispatching, customer account management, real-time fault tracking, and technical team intelligence dashboard.</p>
+      </div>
+      <div class="card" style="border-color:rgba(245,158,11,0.2)">
+        <div style="font-size:32px;margin-bottom:12px">⚡</div>
+        <h3 style="font-family:var(--fd);font-size:20px;letter-spacing:2px;color:var(--gold);margin-bottom:8px">AMARA COMMAND</h3>
+        <p style="font-size:13px;color:var(--ts);line-height:1.7">Management-facing national command platform. Full grid oversight, financial performance, staff management, export monitoring, environmental reporting, and strategic forecasting. The nerve centre of a transformed nation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-in">
+    <div>
+      <div class="fbrand">AMARA</div>
+      <div class="fbsub">POWER SYSTEMS NIGERIA</div>
+      <div class="fslogan">"Light Belongs Here."</div>
+    </div>
+    <div class="fcopy">
+      <div>© 2025 Buhari Mohammed. All Rights Reserved.</div>
+      <div>AMARA Power Systems Nigeria — Investment Proposal Series</div>
+      <div style="margin-top:4px;color:var(--tm);font-size:10px">Confidential. Authorised investment review only.</div>
+    </div>
+    <div class="fid">
+      <div>AMARA-D2-2025-002</div>
+      <div>Dossier II of III</div>
+      <span class="fnext">→ Dossier III: The Platforms</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+
+Chart.defaults.color='#64748B';
+Chart.defaults.borderColor='rgba(255,255,255,0.05)';
+Chart.defaults.font.family='JetBrains Mono';
+Chart.defaults.font.size=10;
+const TT={backgroundColor:'rgba(3,7,15,0.97)',borderColor:'rgba(0,180,255,0.2)',borderWidth:1,padding:10};
+
+// Energy Mix
+try {
+new Chart(document.getElementById('cMix'),{
+  type:'doughnut',
+  data:{
+    labels:['Solar (40%)','Natural Gas (35%)','Hydro (15%)','Wind (7%)','Biomass/Other (3%)'],
+    datasets:[{data:[40,35,15,7,3],
+      backgroundColor:['#F59E0B','#3B82F6','#00B4FF','#10B981','#6B7280'],
+      borderColor:'rgba(3,7,15,0.8)',borderWidth:4,hoverOffset:8}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
+    plugins:{legend:{position:'right',labels:{color:'#94A3B8',boxWidth:12,padding:14,font:{size:11}}},
+      tooltip:{...TT,callbacks:{label:c=>c.label+': '+c.parsed+'% of 30,000 MW'}}}}
+});
+
+// Phase capacity
+new Chart(document.getElementById('cPhase'),{
+  type:'bar',
+  data:{
+    labels:['Phase 0','Phase 1 (Yr 1-4)','Phase 2 (Yr 4-7)','Phase 3 (Yr 7-10)','Export'],
+    datasets:[
+      {label:'Solar MW',data:[0,4000,8000,12000,14000],backgroundColor:'rgba(245,158,11,0.75)',borderRadius:3,borderWidth:0},
+      {label:'Gas MW',data:[0,3500,7000,10500,12000],backgroundColor:'rgba(59,130,246,0.65)',borderRadius:3,borderWidth:0},
+      {label:'Hydro MW',data:[0,1500,3000,4500,4500],backgroundColor:'rgba(0,180,255,0.6)',borderRadius:3,borderWidth:0},
+      {label:'Wind MW',data:[0,700,1400,2100,2500],backgroundColor:'rgba(16,185,129,0.65)',borderRadius:3,borderWidth:0},
+      {label:'Other MW',data:[0,300,600,900,1000],backgroundColor:'rgba(107,114,128,0.6)',borderRadius:3,borderWidth:0}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#94A3B8',boxWidth:10,padding:10}},tooltip:{...TT,mode:'index',intersect:false}},
+    scales:{
+      x:{stacked:true,grid:{display:false},ticks:{color:'#475569'}},
+      y:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#475569',callback:v=>v.toLocaleString()+' MW'}}
+    }}
+});
+
+// CapEx by phase
+new Chart(document.getElementById('cCapex'),{
+  type:'bar',
+  data:{
+    labels:['Solar Gen','Gas Gen','Wind/Hydro','Transmission','Distribution','Smart Meters','NEXUS Sys','Contingency'],
+    datasets:[
+      {label:'Phase 1 $B',data:[6.0,4.5,2.0,3.0,3.5,1.5,0.5,1.5],backgroundColor:'rgba(0,180,255,0.7)',borderRadius:3,borderWidth:0},
+      {label:'Phase 2 $B',data:[6.0,4.5,2.5,3.0,3.5,1.5,0.5,1.5],backgroundColor:'rgba(0,180,255,0.35)',borderRadius:3,borderWidth:0},
+      {label:'Phase 3 $B',data:[6.0,4.5,2.5,2.0,3.0,1.5,0.5,1.5],backgroundColor:'rgba(0,180,255,0.15)',borderRadius:3,borderWidth:0}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#94A3B8',boxWidth:10,padding:10}},tooltip:{...TT,mode:'index',intersect:false,callbacks:{label:c=>' $'+c.parsed.y+'B'}}},
+    scales:{
+      x:{stacked:true,grid:{display:false},ticks:{color:'#475569',font:{size:9}}},
+      y:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#475569',callback:v=>'$'+v+'B'}}
+    }}
+});
+
+// Revenue projection
+new Chart(document.getElementById('cRevenue'),{
+  type:'line',
+  data:{
+    labels:['2027','2028','2029','2030','2031','2032','2033','2034','2035','2036','2037','2038','2039','2040','2041','2042','2043','2044','2045','2046','2047','2048','2049','2050'],
+    datasets:[
+      {label:'Annual Revenue ($B)',data:[0.4,1.2,2.8,4.5,5.8,7.2,8.1,8.8,9.5,10.2,10.8,11.3,11.8,12.2,12.6,13.0,13.3,13.6,13.9,14.2,14.4,14.7,14.9,15.2],
+        borderColor:'#00E5A0',backgroundColor:'rgba(0,229,160,0.06)',fill:true,tension:0.4,pointRadius:2,borderWidth:2},
+      {label:'Cumulative Revenue ($B)',data:[0.4,1.6,4.4,8.9,14.7,21.9,30.0,38.8,48.3,58.5,69.3,80.6,92.4,104.6,117.2,130.2,143.5,157.1,171.0,185.2,199.6,214.3,229.2,244.4],
+        borderColor:'#F59E0B',backgroundColor:'rgba(245,158,11,0.04)',fill:true,tension:0.4,pointRadius:2,borderWidth:1.5,borderDash:[5,4]}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{labels:{color:'#94A3B8',boxWidth:10,padding:14}},tooltip:TT},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#475569',font:{size:9}}},
+      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#475569',callback:v=>'$'+v+'B'}}
+    }}
+});
+
+// CO2 offset chart
+new Chart(document.getElementById('cCO2'),{
+  type:'bar',
+  data:{
+    labels:['Diesel Generators','Telecom Generators','Industrial Self-Gen','Transport','Agriculture'],
+    datasets:[{label:'CO₂ Avoided (Million Tonnes/yr)',
+      data:[32,14,18,8,4],
+      backgroundColor:(ctx)=>{const g=ctx.chart.ctx.createLinearGradient(0,0,0,240);g.addColorStop(0,'rgba(0,229,160,0.8)');g.addColorStop(1,'rgba(0,229,160,0.15)');return g},
+      borderColor:'#00E5A0',borderWidth:1,borderRadius:4}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>c.parsed.y+'M tonnes CO₂/yr avoided'}}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#475569',font:{size:9}}},
+      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#475569',callback:v=>v+'M t'}}
+    }}
+});
+
+// Solar irradiance donut-style (Nigeria regions)
+new Chart(document.getElementById('cSolar'),{
+  type:'bar',
+  data:{
+    labels:['Sokoto','Maiduguri','Kano','Jos Plateau','Abuja/FCT','Ibadan','Lagos','Port Harcourt','Enugu'],
+    datasets:[{label:'Solar Irradiance (kWh/m²/day)',
+      data:[6.8,6.6,6.4,5.8,5.2,4.8,4.5,4.2,4.4],
+      backgroundColor:(ctx)=>{
+        const v=ctx.raw;
+        return v>=6.0?'rgba(245,158,11,0.85)':v>=5.0?'rgba(245,158,11,0.55)':'rgba(245,158,11,0.3)'},
+      borderRadius:4,borderWidth:0}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>c.parsed.x+' kWh/m²/day'}}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#475569'},min:3,max:8},
+      y:{grid:{display:false},ticks:{color:'#94A3B8'}}
+    }}
+});
+} catch(e) { console.warn("Chart init error:", e); }
+
+// Mark body ready so fade-in animations activate
+document.body.classList.add('js-ready');
+
+// Intersection observer — lower threshold + rootMargin for reliability on all screen sizes
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); });
+}, {threshold: 0.03, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fi').forEach(el => obs.observe(el));
+
+// Fallback: if observer misses elements (desktop edge case), reveal all after 2s
+setTimeout(() => {
+  document.querySelectorAll('.fi:not(.vis)').forEach(el => el.classList.add('vis'));
+}, 2000);
+
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('nav');
+  if(!nav) return;
+  if(window.scrollY > 70) { nav.style.padding='10px 48px'; nav.style.borderBottomColor='rgba(0,180,255,0.12)'; }
+  else { nav.style.padding='14px 48px'; nav.style.borderBottomColor='rgba(255,255,255,0.06)'; }
+});
+
+</script>
+</body>
+</html>
